@@ -1,0 +1,56 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const { findUserByEmail, updatePassword } = require('../models/userModel');
+
+require('dotenv').config();
+
+
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const users = await findUserByEmail(email);
+        if (users.length === 0)
+            return res.status(400).json({ message: 'Email no registrado' });
+
+        const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+            expiresIn: '15m',
+        });
+
+
+        res.json({ message: `Recuperar contraseña: http://localhost:${process.env.PORT}/api/v1/auth/reset-password/${token}` });
+    } catch (err) {
+        res.status(500).json({ message: 'Error al recuperar contraseña' });
+    }
+};
+
+
+const resetPassword = async (req, res) => {
+    
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    try {
+
+        if (!newPassword || newPassword.length < 6) {
+            return res.status(400).json({ message: 'La nueva contraseña debe tener al menos 6 caracteres' });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const email = decoded.email;
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await updatePassword(email, hashedPassword);
+
+        res.json({ message: 'Contraseña actualizada correctamente' });
+    } catch (err) {
+        res.status(400).json({ message: 'Token inválido o expirado' });
+    }
+};
+
+module.exports = {
+    forgotPassword,
+    resetPassword
+};
