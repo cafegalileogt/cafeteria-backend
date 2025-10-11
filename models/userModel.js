@@ -11,6 +11,16 @@ const findUserByEmail = async (email) => {
   });
 };
 
+const findUserBCorreo = async (email) => {
+  const sql = 'SELECT * FROM usuarios WHERE correo_institucional = ?';
+  return new Promise((resolve, reject) => {
+    db.query(sql, [email], (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+};
+
 const updatePassword = async (email, hashedPassword) => {
   const sql = 'UPDATE users SET password = ? WHERE email = ?';
   return new Promise((resolve, reject) => {
@@ -24,5 +34,6 @@ const updatePassword = async (email, hashedPassword) => {
 
 module.exports = {
   findUserByEmail,
-  updatePassword
+  updatePassword,
+  findUserBCorreo
 }

@@ -50,7 +50,24 @@ const resetPassword = async (req, res) => {
     }
 };
 
+const authenticateToken = (req, res, next) => {
+    const token = req.headers['authorization'];
+
+    if (!token) return res.status(401).json({messsage: 'Unauthorized'});
+
+    try{
+        const tokenWithoutBearer = token.replace('Barer ', '');
+        const verified = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET);
+        req.user = verified;
+        next();
+    }
+    catch(error){
+        res.status(401).json({ messsage: 'Inalid Token' });
+    }
+}
+
 module.exports = {
     forgotPassword,
-    resetPassword
+    resetPassword, 
+    authenticateToken
 };
