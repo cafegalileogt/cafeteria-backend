@@ -1,14 +1,12 @@
-const pool = require("../config/db");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const { findUserBCorreo } = require('../models/userModel');
+const { findUserByEmail } = require('../models/userModel');
 
  const loginUsers = async (req, res) => {
   try {
     const { correo_institucional, contrasena } = req.body;
 
-    const [user] =  await findUserBCorreo(correo_institucional);
+    const [user] =  await findUserByEmail(correo_institucional);
     if (user.length === 0) {
       return res.status(401).json({ message: "invalido" });
     }
