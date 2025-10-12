@@ -1,60 +1,41 @@
 const jwt = require("jsonwebtoken");
 
-const { findUserByEmail } = require('../models/userModel');
+const { createUser, findUserByEmail } = require('../models/userModel');
 
- const loginUsers = async (req, res) => {
+
+const registerStudent = async (req, res) => {
+  const { name, email, password } = req.body;
+
   try {
-    const { correo_institucional, contrasena } = req.body;
+    const existingUsers = await findUserByEmail(email);
+    if (existingUsers.length > 0)
+      return res.status(400).json({ message: 'Email ya registrado' });
 
-    const [user] =  await findUserByEmail(correo_institucional);
-    if (user.length === 0) {
-      return res.status(401).json({ message: "invalido" });
-    }
+    const hashedPassword = await bcrypt.hash(password, 10); // Mejor que 8
+    const user = {
+      name,
+      correo_institucional: email,
+      contrasena: hashedPassword,
+      id_rol: 1, // default "Estudiante"
+      is_active: 0, // default "No activado"
+    };
 
-    // const isMatch = await bcrypt.compare(contrasena, user[0].contrasena);
-    // if (!isMatch) {
-    //   return res.status(401).json({ message: "Contraseña inválida" });
-    // }
-    if (contrasena !== user.contrasena) {
-      return res.status(401).json({ message: "Contraseña inválida" });
-    }
+    await createUser(user);
 
-    const token = jwt.sign(
-      {
-        id_usuario: user.id_usuario,
-        role: user.id_role,
-        correo: user.correo_institucional,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "3m" }
-    );
-    res.cookie("usuarioToken", token, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-      maxAge: 3 * 60 * 1000,
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
     });
 
-    res.json({ message: "Inicio de sesión exitoso", token });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ error: "Error al iniciar sesión", message: error.message });
-  }
-};
 
-const logoutUsers = (req, res) => {
-  res.clearCookie("usuarioToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-  res.json({ message: "Sesión cerrada correctamente" });
+    res.status(201).json({
+      url: `http://localhost:${process.env.PORT}/api/v1/auth/activate/${token}`,
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Error en el registro' });
+  }
 };
 
 
 module.exports = {
-  loginUsers,
-  logoutUsers 
+  registerStudent
 }
