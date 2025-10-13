@@ -28,8 +28,8 @@
   Restablece la contraseña del usuario utilizando un token.  
   **Cuerpo de la solicitud:**  
   ```json  
-  {  
-    "password": "nueva_contraseña"  
+   {  
+    "newPassword": "nueva contraseña "  
   }  
   ```
 

@@ -8,15 +8,17 @@ require('dotenv').config();
 
 const login = async (req, res) => {
     try {
-        const { correo_institucional, contrasena } = req.body;
+        const { email, password } = req.body;
 
-        const [user] = await findUserByEmail(correo_institucional);
-        if (user.length === 0) {
+        const [user] = await findUserByEmail(email);
+        if (user.length === 0) { 
             return res.status(401).json({ message: "invalido" });
         }
-
-        if (contrasena !== user.contrasena) {
-            return res.status(401).json({ message: "Contraseña inválida" });
+        const validPassword = await bcrypt.compare(password, user.contrasena);
+        console.log('Contraseña válida', validPassword);
+        
+        if (!validPassword) {
+        return res.status(401).json({ message: "Contraseña inválida" });
         }
 
         const token = jwt.sign(
@@ -82,7 +84,7 @@ const resetPassword = async (req, res) => {
 
     const { token } = req.params;
     const { newPassword } = req.body;
-
+console.log("cuerpo",req.body)
     try {
 
         if (!newPassword || newPassword.length < 6) {
