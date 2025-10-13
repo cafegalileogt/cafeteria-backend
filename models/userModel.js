@@ -1,14 +1,14 @@
 const db = require('../config/db');
 
 
-const createUser = (user, callback) => {
+const createUser = async(user, callback) => {
   const sql = 'INSERT INTO usuarios SET ?';
   db.query(sql, user, callback);
 };
 
 
 const activateUser = async (email) => {
-  const sql = 'UPDATE usuarios SET isActive = 1 WHERE email = ?';
+  const sql = 'UPDATE usuarios SET is_Active = 1 WHERE correo_institucional = ?';
   return new Promise((resolve, reject) => {
     db.query(sql, [email], (err, results) => {
       if (err) reject(err);

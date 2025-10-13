@@ -104,15 +104,16 @@ const resetPassword = async (req, res) => {
 
 
 const activateAccount = async (req, res) => {
-    const { token } = req.params;
-
+    const { token } = req.params;    
     try {
+
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const email = decoded.email;
 
         await activateUser(email);
         res.json({ message: 'Cuenta activada correctamente' });
     } catch (err) {
+        console.error(err);
         res.status(400).json({ message: 'Token inválido o expirado' });
     }
 };

@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
+
 
 const { createUser, findUserByEmail } = require('../models/userModel');
 
@@ -13,7 +15,7 @@ const registerStudent = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10); // Mejor que 8
     const user = {
-      name,
+      nombre:name,
       correo_institucional: email,
       contrasena: hashedPassword,
       id_rol: 1, // default "Estudiante"
