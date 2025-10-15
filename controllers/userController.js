@@ -1,9 +1,8 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
-
-
+const { sendActivationEmail } = require ('../utils/emailSender');
 const { createUser, findUserByEmail } = require('../models/userModel');
-
+const { emailTemplate } = require('../utils/emailTemplate');
 
 const registerStudent = async (req, res) => {
   const { name, email, password } = req.body;
@@ -28,12 +27,20 @@ const registerStudent = async (req, res) => {
       expiresIn: '1d',
     });
 
+    const activationLink = `http://localhost:${process.env.PORT}/api/v1/auth/activate/${token}`;
 
-    res.status(201).json({
-      url: `http://localhost:${process.env.PORT}/api/v1/auth/activate/${token}`,
+
+    const html = emailTemplate
+    .replace('{{name}}', name)
+    .replace('{{activationLink}}', activationLink);
+
+    sendActivationEmail(email, 'Activación de cuenta', html);
+    res.status(201).json({url: activationLink,
     });
+
   } catch (err) {
-    res.status(500).json({ message: 'Error en el registro' });
+    console.log(err);
+    res.status(500).json({ message: 'Error en el registro', error: err.message });
   }
 };
 

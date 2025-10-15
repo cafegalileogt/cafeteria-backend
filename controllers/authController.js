@@ -1,18 +1,25 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const { findUserByEmail, updatePassword, activateUser } = require('../models/userModel');
-
 require('dotenv').config();
+const path = require("path");
+const { react } = require('react');
+const {resetPasswordTemplate}  = require('../utils/resetPassword');
+const { sendResetPasswordEmail } = require ('../utils/emailSender');
+
 
 
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const [user] = await findUserByEmail(email);
-        if (user.length === 0) { 
-            return res.status(401).json({ message: "invalido" });
+        const result = await findUserByEmail(email); 
+        if (!result || result.length === 0) { 
+            return res.status(401).json({ message: "Usuario invalido" });
+        }
+        const user = result[0];
+        if (user.is_active === 0) {
+            return res.status(401).json({ message: "Debes activar tu cuenta antes de iniciar sesión." });
         }
         const validPassword = await bcrypt.compare(password, user.contrasena);
         console.log('Contraseña válida', validPassword);
@@ -58,9 +65,7 @@ const logout = (req, res) => {
 
 
 const forgotPassword = async (req, res) => {
-    
     const { email } = req.body;
-
     try {
         const users = await findUserByEmail(email);
         if (users.length === 0)
@@ -71,16 +76,23 @@ const forgotPassword = async (req, res) => {
         });
 
 
-        res.json({
-            url: `http://localhost:${process.env.PORT}/api/v1/auth/reset-password/${token}`
+        const resetLink = `http://localhost:${process.env.PORT}/api/v1/auth/reset-password/${token}`;
+    const html = resetPasswordTemplate.replace('{{token}}', token);
+
+        sendResetPasswordEmail(email, 'Restablecimiento de contraseña', html);
+        res.status(200).json({
+            url: resetLink,
+            message: 'Se ha enviado un enlace de restablecimiento de contraseña a tu correo electrónico. El enlace expirará en 15 minutos.',
         });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Error al recuperar contraseña' });
     }
 };
 
 
 const resetPassword = async (req, res) => {
+    console.log("entro al controlador")
 
     const { token } = req.params;
     const { newPassword } = req.body;
@@ -108,12 +120,12 @@ console.log("cuerpo",req.body)
 const activateAccount = async (req, res) => {
     const { token } = req.params;    
     try {
-
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const email = decoded.email;
 
         await activateUser(email);
-        res.json({ message: 'Cuenta activada correctamente' });
+        const successPage = path.join(__dirname, "../utils/activatedUser.html");
+        res.sendFile(successPage);
     } catch (err) {
         console.error(err);
         res.status(400).json({ message: 'Token inválido o expirado' });
