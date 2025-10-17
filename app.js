@@ -8,6 +8,7 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/authRouters');
 const userRoutes = require('./routes/userRouters');
+const productRoutes = require('./routes/productsRouters');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/products', productRoutes);
 
 app.listen(port, () => {
   console.log(`Servidor backend Cafeteria escuchando en http://localhost:${port}`);

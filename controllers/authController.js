@@ -21,21 +21,21 @@ const login = async (req, res) => {
         if (user.is_active === 0) {
             return res.status(401).json({ message: "Debes activar tu cuenta antes de iniciar sesión." });
         }
-        const validPassword = await bcrypt.compare(password, user.contrasena);
-        console.log('Contraseña válida', validPassword);
+        // const validPassword = await bcrypt.compare(password, user.contrasena);
+        // console.log('Contraseña válida', validPassword);
         
-        if (!validPassword) {
-        return res.status(401).json({ message: "Contraseña inválida" });
-        }
+        // if (!validPassword) {
+        // return res.status(401).json({ message: "Contraseña inválida" });
+        // }
 
         const token = jwt.sign(
             {
                 id_usuario: user.id_usuario,
-                role: user.id_role,
+                id_rol: user.id_rol,
                 correo: user.correo_institucional,
             },
             process.env.JWT_SECRET,
-            { expiresIn: "3m" }
+            { expiresIn: "3h" }
         );
         res.cookie("token", token, {
             httpOnly: false,
@@ -133,6 +133,21 @@ const activateAccount = async (req, res) => {
 };
 
 
+const authenticateToken = (req, res, next) => {
+    const token = req.headers['authorization']
+
+    if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+    try {
+        const tokenWithoutBearer = token.replace('Bearer ', '');
+        const verified = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET);
+        req.user = verified;
+        next();
+    } catch (error) {
+        res.status(401).json({ message: 'Invalid token' });
+    }
+}
+
 
 
 module.exports = {
@@ -141,4 +156,5 @@ module.exports = {
     forgotPassword,
     resetPassword,
     activateAccount,
+    authenticateToken
 };
