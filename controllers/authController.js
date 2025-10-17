@@ -21,12 +21,12 @@ const login = async (req, res) => {
         if (user.is_active === 0) {
             return res.status(401).json({ message: "Debes activar tu cuenta antes de iniciar sesión." });
         }
-        // const validPassword = await bcrypt.compare(password, user.contrasena);
-        // console.log('Contraseña válida', validPassword);
+        const validPassword = await bcrypt.compare(password, user.contrasena);
+        console.log('Contraseña válida', validPassword);
         
-        // if (!validPassword) {
-        // return res.status(401).json({ message: "Contraseña inválida" });
-        // }
+        if (!validPassword) {
+        return res.status(401).json({ message: "Contraseña inválida" });
+        }
 
         const token = jwt.sign(
             {
@@ -35,13 +35,13 @@ const login = async (req, res) => {
                 correo: user.correo_institucional,
             },
             process.env.JWT_SECRET,
-            { expiresIn: "3h" }
+            { expiresIn: "5m" }
         );
         res.cookie("token", token, {
             httpOnly: false,
             secure: process.env.NODE_ENV === "production",
             sameSite: "Strict",
-            maxAge: 3 * 60 * 1000,
+            maxAge: 5 * 60 * 1000,
         });
 
         res.json({ message: "Inicio de sesión exitoso", token });
