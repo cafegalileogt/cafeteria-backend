@@ -3,18 +3,16 @@ const jwt = require('jsonwebtoken');
 const { findUserByEmail, updatePassword, activateUser } = require('../models/userModel');
 require('dotenv').config();
 const path = require("path");
-const { react } = require('react');
-const {resetPasswordTemplate}  = require('../utils/resetPassword');
-const { sendResetPasswordEmail } = require ('../utils/emailSender');
-
+const { resetPasswordTemplate } = require('../utils/resetPassword');
+const { sendResetPasswordEmail } = require('../utils/emailSender');
 
 
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const result = await findUserByEmail(email); 
-        if (!result || result.length === 0) { 
+        const result = await findUserByEmail(email);
+        if (!result || result.length === 0) {
             return res.status(401).json({ message: "Usuario invalido" });
         }
         const user = result[0];
@@ -23,9 +21,9 @@ const login = async (req, res) => {
         }
         const validPassword = await bcrypt.compare(password, user.contrasena);
         console.log('Contraseña válida', validPassword);
-        
+
         if (!validPassword) {
-        return res.status(401).json({ message: "Contraseña inválida" });
+            return res.status(401).json({ message: "Contraseña inválida" });
         }
 
         const token = jwt.sign(
@@ -35,7 +33,7 @@ const login = async (req, res) => {
                 correo: user.correo_institucional,
             },
             process.env.JWT_SECRET,
-            { expiresIn: "3m" }
+            { expiresIn: "1d" } // Expira en 1 día
         );
         res.cookie("token", token, {
             httpOnly: false,
@@ -77,7 +75,7 @@ const forgotPassword = async (req, res) => {
 
 
         const resetLink = `http://localhost:${process.env.PORT}/api/v1/auth/reset-password/${token}`;
-    const html = resetPasswordTemplate.replace('{{token}}', token);
+        const html = resetPasswordTemplate.replace('{{token}}', token);
 
         sendResetPasswordEmail(email, 'Restablecimiento de contraseña', html);
         res.status(200).json({
@@ -96,7 +94,7 @@ const resetPassword = async (req, res) => {
 
     const { token } = req.params;
     const { newPassword } = req.body;
-console.log("cuerpo",req.body)
+    console.log("cuerpo", req.body)
     try {
 
         if (!newPassword || newPassword.length < 6) {
@@ -118,7 +116,7 @@ console.log("cuerpo",req.body)
 
 
 const activateAccount = async (req, res) => {
-    const { token } = req.params;    
+    const { token } = req.params;
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const email = decoded.email;
@@ -133,6 +131,19 @@ const activateAccount = async (req, res) => {
 };
 
 
+const authUser = (req, res, next) => {
+    
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: 'No autorizado, falta el token' });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        return res.status(401).json({ message: 'Token inválido o expirado' });
+    }
+};
 
 
 module.exports = {
@@ -141,4 +152,5 @@ module.exports = {
     forgotPassword,
     resetPassword,
     activateAccount,
+    authUser
 };
