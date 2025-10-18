@@ -28,6 +28,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/products', productRoutes);
 
 app.listen(port, () => {
   console.log(`Servidor backend Cafeteria escuchando en http://localhost:${port}`);

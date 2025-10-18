@@ -131,21 +131,6 @@ const activateAccount = async (req, res) => {
 };
 
 
-const authenticateToken = (req, res, next) => {
-    const token = req.headers['authorization']
-
-    if (!token) return res.status(401).json({ message: 'Unauthorized' });
-
-    try {
-        const tokenWithoutBearer = token.replace('Bearer ', '');
-        const verified = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET);
-        req.user = verified;
-        next();
-    } catch (error) {
-        res.status(401).json({ message: 'Invalid token' });
-    }
-}
-
 const authUser = (req, res, next) => {
     
     const token = req.cookies.token;
@@ -167,4 +152,5 @@ module.exports = {
     forgotPassword,
     resetPassword,
     activateAccount,
+    authUser,
 };
