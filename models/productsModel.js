@@ -1,6 +1,26 @@
 const db = require('../config/db');
 
 
+const createProducts = async (product) => {
+  const sql = 'INSERT INTO producto SET ?'; 
+  return new Promise((resolve, reject) => {
+    db.query(sql, product, (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+};
+
+const findProductById = async (id_producto) => {
+  const sql = 'SELECT * FROM producto WHERE id_producto = ?'; 
+  return new Promise((resolve, reject) => {
+    db.query(sql, [id_producto], (err, results) => {
+      if (err) reject(err);
+      else resolve(results[0]);
+    });
+  });
+};
+
 const findAllProductsCategorie = async () => {
   const sql = 'SELECT * FROM producto WHERE estado = 1 AND id_categoria IN (SELECT id_categoria FROM categoria)';
   return new Promise((resolve, reject) => {
@@ -21,6 +41,7 @@ const findProductsByCategorie = async (idCategorie) => {
     });
   });
 };
+
 
 
 
@@ -47,6 +68,8 @@ const deleteProductModel = async (id_producto) => {
 };
 
 module.exports = {
+  createProducts,
+  findProductById,
   findProductsByCategorie, 
   findAllProductsCategorie,
   updateProductModel,

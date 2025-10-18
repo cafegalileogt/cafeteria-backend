@@ -1,22 +1,45 @@
-const jwt = require("jsonwebtoken");
-const { findProductsByCategorie, findAllProductsCategorie, updateProductModel, deleteProductModel } = require("../models/productsModel");
+const { createProducts, findProductById, findProductsByCategorie, findAllProductsCategorie, updateProductModel, deleteProductModel } = require("../models/productsModel");
 require("dotenv").config();
-const path = require("path");
 
+
+const crearProduct = async (req, res) => {
+  const product = req.body;
+
+  try {
+    const result = await createProducts(product);
+    res.status(201).json({ id_producto: result?.insertId, message: "Producto creado exitosamente" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getProductById = async (req, res) => {
+  const { id_producto } = req.params;
+
+  try {
+    const product = await findProductById(id_producto);
+    if (!product) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 const AllByCategories = async (req, res) => {
-  
+
   try {
     let id_usuario =
       req.user && req.user.id_usuario
         ? req.user.id_usuario
         : res.status(401).json({
-            error: "No autenticado. Por favor, inicie sesión para continuar.",
-          });
+          error: "No autenticado. Por favor, inicie sesión para continuar.",
+        });
 
     let usuario = req.user.usuario;
     let idRole = req.user.id_rol;
-    
+
     if (idRole === 1 || idRole === 2) {
       const result = await findAllProductsCategorie();
 
@@ -49,13 +72,13 @@ const filtrarByCategories = async (req, res) => {
       req.user && req.user.id_usuario
         ? req.user.id_usuario
         : res.status(401).json({
-            error: "No autenticado. Por favor, inicie sesión para continuar.",
-          });
+          error: "No autenticado. Por favor, inicie sesión para continuar.",
+        });
 
 
     let usuario = req.user.usuario;
     let idRole = req.user.id_rol;
-    
+
     if (idRole === 1 || idRole === 2) {
       const result = await findProductsByCategorie(idCategorie);
 
@@ -65,7 +88,7 @@ const filtrarByCategories = async (req, res) => {
           .json({ message: "No hay productos en la categoria" });
       }
 
-      res.status(200).json( result );
+      res.status(200).json(result);
     } else {
       res
         .status(401)
@@ -77,6 +100,7 @@ const filtrarByCategories = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 const updateProduct = async (req, res) => {
   try {
@@ -138,12 +162,12 @@ const deleteteProduct = async (req, res) => {
       req.user && req.user.id_usuario
         ? req.user.id_usuario
         : res.status(401).json({
-            error: "No autenticado. Por favor, inicie sesión para continuar.",
-          });
+          error: "No autenticado. Por favor, inicie sesión para continuar.",
+        });
 
     let usuario = req.user.usuario;
     let idRole = req.user.id_rol;
-    
+
     if (idRole === 2 || idRole === 3) {
 
       const result = await deleteProductModel(id_producto);
@@ -166,6 +190,8 @@ const deleteteProduct = async (req, res) => {
 };
 
 module.exports = {
+  crearProduct,
+  getProductById,
   filtrarByCategories,
   AllByCategories,
   updateProduct,
