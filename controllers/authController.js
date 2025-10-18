@@ -20,7 +20,6 @@ const login = async (req, res) => {
             return res.status(401).json({ message: "Debes activar tu cuenta antes de iniciar sesión." });
         }
         const validPassword = await bcrypt.compare(password, user.contrasena);
-        console.log('Contraseña válida', validPassword);
 
         if (!validPassword) {
             return res.status(401).json({ message: "Contraseña inválida" });
@@ -90,11 +89,11 @@ const forgotPassword = async (req, res) => {
 
 
 const resetPassword = async (req, res) => {
-    console.log("entro al controlador")
+
 
     const { token } = req.params;
     const { newPassword } = req.body;
-    console.log("cuerpo", req.body)
+
     try {
 
         if (!newPassword || newPassword.length < 6) {

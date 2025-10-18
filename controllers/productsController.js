@@ -44,7 +44,7 @@ const filtrarByCategories = async (req, res) => {
   const { idCategorie } = req.params;
 
   try {
-    // console. log(req.user);
+
     let id_usuario =
       req.user && req.user.id_usuario
         ? req.user.id_usuario
@@ -52,7 +52,7 @@ const filtrarByCategories = async (req, res) => {
             error: "No autenticado. Por favor, inicie sesión para continuar.",
           });
 
-    // console.log("id_rol:", req.user.id_rol);
+
     let usuario = req.user.usuario;
     let idRole = req.user.id_rol;
     
