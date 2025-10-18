@@ -1,3 +1,5 @@
+## Documentación de Endpoints
+
 ### Productos
 
 - **GET /api/v1/products/categories**  
