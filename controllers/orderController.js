@@ -12,7 +12,7 @@ const orden = async (req, res) => {
             return res.status(400).json({ error: 'Faltan datos de la orden' });
         }
 
-        const { total } = order;
+        const { total, numero_orden } = order;
 
         if (!Array.isArray(details) || details.length === 0) {
             return res.status(400).json({ error: 'El detalle de la orden debe ser un arreglo con al menos un producto' });
@@ -21,6 +21,7 @@ const orden = async (req, res) => {
         const newOrden = {
             id_usuario: req.user?.id_usuario, // Obtener el ID del usuario autenticado
             total,
+            numero_orden,
         };
 
         const result = await createOrder(newOrden, details);
