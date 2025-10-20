@@ -1,5 +1,5 @@
 const { authUser } = require('../controllers/authController');
-const { crearProduct, getProductById, filtrarByCategories,  AllByCategories, updateProduct, deleteteProduct} = require("../controllers/productsController");
+const { crearProduct, getProductById, filtrarByCategories,  AllByCategories, updateProduct, deleteteProduct,getCategories} = require("../controllers/productsController");
 
 const router = require('express').Router();
 
@@ -9,5 +9,7 @@ router.get("/productos_by_categorias/:idCategorie", authUser, filtrarByCategorie
 router.get("/productos_categorias", authUser, AllByCategories);
 router.patch("/update_product/:id_producto", authUser, updateProduct);
 router.delete("/delete_product/:id_producto", authUser, deleteteProduct);
+router.get("/getCategories", getCategories);
+
 
 module.exports = router;

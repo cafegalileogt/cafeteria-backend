@@ -18,10 +18,11 @@ const registerStudent = async (req, res) => {
       correo_institucional: email,
       contrasena: hashedPassword,
       id_rol: 1, // default "Estudiante"
-      is_active: 0, // default "No activado"
+      isActive: 0, // default "No activado"
     };
 
     await createUser(user);
+    console.log('Usuario creado:', user);
 
     const token = jwt.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: '1d',

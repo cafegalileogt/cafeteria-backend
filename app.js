@@ -15,8 +15,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 // Middlewares
-app.use(cors({ origin: '*' }));
+app.use(cors({
+  origin: "http://localhost:8081",
+  credentials: true,
+}));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // para recibir forms

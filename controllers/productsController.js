@@ -1,4 +1,4 @@
-const { createProducts, findProductById, findProductsByCategorie, findAllProductsCategorie, updateProductModel, deleteProductModel } = require("../models/productsModel");
+const { createProducts, findProductById, findAllCategories, findAllProductsCategorie, updateProductModel, deleteProductModel } = require("../models/productsModel");
 require("dotenv").config();
 
 
@@ -28,6 +28,7 @@ const getProductById = async (req, res) => {
 };
 
 const AllByCategories = async (req, res) => {
+  console.log('Entrando a AllByCategories');
 
   try {
     let id_usuario =
@@ -153,6 +154,22 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const getCategories = async (req, res) => {
+  console.log('Entrando a getCategories');
+  try {
+    const categories = await findAllCategories(); 
+    res.status(200).json({
+      success: true,
+      result: categories, 
+    });
+  } catch (error) {
+    console.error("Error al obtener las categorías:", error);
+    res.status(500).json({
+      success: false,
+      error: "Error al obtener las categorías",
+    });
+  }
+};
 
 const deleteteProduct = async (req, res) => {
   try {
@@ -195,5 +212,6 @@ module.exports = {
   filtrarByCategories,
   AllByCategories,
   updateProduct,
-  deleteteProduct
+  deleteteProduct,
+  getCategories
 };

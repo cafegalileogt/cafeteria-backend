@@ -16,7 +16,7 @@ const login = async (req, res) => {
             return res.status(401).json({ message: "Usuario invalido" });
         }
         const user = result[0];
-        if (user.is_active === 0) {
+        if (user.isActive === 0) {
             return res.status(401).json({ message: "Debes activar tu cuenta antes de iniciar sesión." });
         }
         const validPassword = await bcrypt.compare(password, user.contrasena);
@@ -35,9 +35,9 @@ const login = async (req, res) => {
             { expiresIn: "1d" } // Expira en 1 día
         );
         res.cookie("token", token, {
-            httpOnly: false,
+            httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "Strict",
+            sameSite: "Lax",
             maxAge: 5 * 60 * 1000,
         });
 
@@ -133,6 +133,7 @@ const activateAccount = async (req, res) => {
 const authUser = (req, res, next) => {
     
     const token = req.cookies.token;
+    console.log('el token: ', token)
     if (!token) return res.status(401).json({ message: 'No autorizado, falta el token' });
 
     try {

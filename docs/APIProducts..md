@@ -47,7 +47,7 @@
 
   ---
 - **GET /api/v1/products/categories**  
-  Obtiene todos los productos activos de las categorías existentes.   
+  Obtiene todos los productos activos de las categorías existentes.  
   **Respuesta exitosa:**  
   ```json  
   {       

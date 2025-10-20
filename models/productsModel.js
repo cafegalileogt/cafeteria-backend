@@ -67,11 +67,22 @@ const deleteProductModel = async (id_producto) => {
   });
 };
 
+const findAllCategories = async () => {
+  const sql = 'SELECT * FROM categoria';
+  return new Promise((resolve, reject) => {
+    db.query(sql, (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+};
+
 module.exports = {
   createProducts,
   findProductById,
-  findProductsByCategorie, 
+  findAllCategories, 
   findAllProductsCategorie,
   updateProductModel,
-  deleteProductModel
+  deleteProductModel,
+  findAllCategories
 }
