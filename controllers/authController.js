@@ -132,8 +132,7 @@ const activateAccount = async (req, res) => {
 
 const authUser = (req, res, next) => {
     
-    const token = req.cookies.token;
-    console.log('el token: ', token)
+const token =req.cookies.token ||(req.headers.authorization && req.headers.authorization.split(" ")[1]);
     if (!token) return res.status(401).json({ message: 'No autorizado, falta el token' });
 
     try {
