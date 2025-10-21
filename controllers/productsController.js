@@ -28,7 +28,6 @@ const getProductById = async (req, res) => {
 };
 
 const AllByCategories = async (req, res) => {
-  console.log('Entrando a AllByCategories');
 
   try {
     let id_usuario =
@@ -155,7 +154,6 @@ const updateProduct = async (req, res) => {
 };
 
 const getCategories = async (req, res) => {
-  console.log('Entrando a getCategories');
   try {
     const categories = await findAllCategories(); 
     res.status(200).json({

@@ -40,8 +40,9 @@ const login = async (req, res) => {
             sameSite: "Lax",
             maxAge: 5 * 60 * 1000,
         });
+        const nombre = result[0].nombre;
 
-        res.json({ message: "Inicio de sesión exitoso", token });
+        res.json({ message: "Inicio de sesión exitoso", token,nombre });
     } catch (error) {
         console.error(error);
         res
