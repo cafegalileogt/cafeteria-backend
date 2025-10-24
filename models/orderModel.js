@@ -47,4 +47,55 @@ const createOrder = async (order, details) => {
   }
 };
 
-module.exports = { createOrder };
+const getOrderUserById = async (usuarioId) => {
+  const sql = `SELECT 
+                o.numero_orden,
+                o.fecha,
+                o.estado,
+                COALESCE(SUM(d.cantidad), 0) AS total_cantidad,
+                o.total
+            FROM orden AS o
+            LEFT JOIN detalle_orden AS d ON o.numero_orden = d.numero_orden
+
+            WHERE o.id_usuario = ?
+
+            GROUP BY o.numero_orden, o.fecha, o.estado, o.total`;
+  return new Promise((resolve, reject) => {
+    db.query(sql, [usuarioId], (err, results) => {
+      if (err) reject(err);
+      else resolve(results[0]);
+    });
+  });
+};
+
+const getOrderDetailsByOrderId = async (numero_orden) => {
+  const sql = `SELECT 
+                d.numero_orden,
+                p.id_producto,
+                p.nombre,
+                p.descripcion,
+                d.cantidad,
+                d.precio_unitario,
+                d.subtotal
+            FROM detalle_orden d
+            INNER JOIN producto p ON d.id_producto = p.id_producto
+            WHERE d.numero_orden = ?`;
+  return new Promise((resolve, reject) => {
+    db.query(sql, [numero_orden], (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+};
+
+const updateOrderStatus = async (numero_orden, estado, id_personal) => {
+  const sql = 'UPDATE orden SET estado = ?, id_personal = ? WHERE numero_orden = ?';
+  return new Promise((resolve, reject) => {
+    db.query(sql, [estado, id_personal, numero_orden], (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+};
+
+module.exports = { createOrder, getOrderUserById, getOrderDetailsByOrderId, updateOrderStatus };
