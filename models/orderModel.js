@@ -23,7 +23,7 @@ const createOrder = async (order, details) => {
 
     // Insertar detalles
     const detailPromises = details.map(detail => {
-      detail.numero_orden = orderResult.insertId;
+      detail.numero_orden = order.numero_orden;
       return new Promise((resolve, reject) => {
         connection.query('INSERT INTO detalle_orden SET ?', detail, (err, results) => {
           if (err) reject(err);
@@ -38,7 +38,7 @@ const createOrder = async (order, details) => {
       connection.commit(err => (err ? reject(err) : resolve()));
     });
 
-    return { orderId: orderResult.insertId, message: 'Orden creada exitosamente' };
+    return { orderId: order.numero_orden, message: 'Orden creada exitosamente' };
   } catch (error) {
     await new Promise(resolve => connection.rollback(() => resolve()));
     throw error;
