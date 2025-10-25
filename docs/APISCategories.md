@@ -13,7 +13,7 @@
         "nombre": "Desayunos",
         "horario": "06:00-10:00",
         "descripcion": "Comidas para iniciar el día",
-        "imagen_categoria": "ruta/imagen.jpg"
+        "imagen_categoria": "base64"
         } 
         /* Más categorías */
     ]
@@ -34,7 +34,7 @@
         {
         "id_categoria": 1,
         "nombre": "Desayunos",
-        "imagen_categoria": "ruta/imagen.jpg"
+        "imagen_categoria": "base64"
         }
         /* Más categorías */
     ]
@@ -56,7 +56,7 @@
     "nombre": "Desayunos",
     "horario": "06:00-10:00",
     "descripcion": "Comidas para iniciar el día",
-    "imagen_categoria": "ruta/imagen.jpg"
+    "imagen_categoria": "base64"
     }
     ```
     **Errores posibles:**
@@ -72,7 +72,7 @@
     "nombre": "Nombre de la categoría",
     "horario": "Horario disponible",
     "descripcion": "Descripción de la categoría",
-    "imagen": "ruta/imagen.jpg"
+    "imagen_categoria": "base64"
     }
     ```
     **Respuesta exitosa:**
@@ -96,7 +96,7 @@
         "nombre": "Nuevo nombre", 
         "horario": "Nuevo horario", 
         "descripcion": "Nueva descripción", 
-        "imagen_categoria": "nueva/ruta.jpg" 
+        "imagen_categoria": "base64" 
     }
     ``` 
     **Respuesta exitosa:**
