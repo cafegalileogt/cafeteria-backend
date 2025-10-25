@@ -25,7 +25,7 @@ const order = async (req, res) => {
         };
 
         const result = await createOrder(newOrden, details);
-        res.status(201).json({ message: 'Orden creada exitosamente', ordenId: result.insertId });
+        res.status(201).json({ message: 'Orden creada exitosamente', ordenId: result.numero_orden });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -36,7 +36,6 @@ const order = async (req, res) => {
 const orderByUserId = async (req, res) => {
 
     try {
-
         const usuarioId = req.params.usuarioId
         if (!usuarioId) {
             return res.status(400).json({ error: 'Falta el ID del usuario' });

@@ -63,7 +63,7 @@ const getOrderUserById = async (usuarioId) => {
   return new Promise((resolve, reject) => {
     db.query(sql, [usuarioId], (err, results) => {
       if (err) reject(err);
-      else resolve(results[0]);
+      else resolve(results);
     });
   });
 };
