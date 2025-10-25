@@ -62,7 +62,7 @@ const AllByCategories = async (req, res) => {
   }
 };
 
-
+// para llamar los productos por categoria en el home o en panel adiminstrativo
 const filtrarByCategories = async (req, res) => {
   const { idCategorie } = req.params;
 
@@ -153,21 +153,7 @@ const updateProduct = async (req, res) => {
   }
 };
 
-const getCategories = async (req, res) => {
-  try {
-    const categories = await findAllCategories(); 
-    res.status(200).json({
-      success: true,
-      result: categories, 
-    });
-  } catch (error) {
-    console.error("Error al obtener las categorías:", error);
-    res.status(500).json({
-      success: false,
-      error: "Error al obtener las categorías",
-    });
-  }
-};
+
 
 const deleteteProduct = async (req, res) => {
   try {
@@ -210,6 +196,5 @@ module.exports = {
   filtrarByCategories,
   AllByCategories,
   updateProduct,
-  deleteteProduct,
-  getCategories
+  deleteteProduct
 };
