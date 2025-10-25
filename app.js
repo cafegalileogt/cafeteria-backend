@@ -10,6 +10,8 @@ const authRoutes = require('./routes/authRouters');
 const userRoutes = require('./routes/userRouters');
 const orderRoutes = require('./routes/orderRouters');
 const productRoutes = require('./routes/productsRouters');
+const categoryRoutes = require('./routes/categoriesRouters'); 
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,6 +36,8 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/categories', categoryRoutes);
+
 
 app.listen(port, () => {
   console.log(`Servidor backend Cafeteria escuchando en http://localhost:${port}`);
