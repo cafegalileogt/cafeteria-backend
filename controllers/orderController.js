@@ -68,7 +68,6 @@ const orderStatusUpdate = async (req, res) => {
     try {
         const { numero_orden } = req.params;
         const { estado, id_personal } = req.body;
-
         if (!numero_orden || !estado || !id_personal) {
             return res.status(400).json({ error: 'Faltan datos para actualizar el estado de la orden (numero_orden, estado, id_personal)' });
         }

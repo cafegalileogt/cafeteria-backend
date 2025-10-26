@@ -5,7 +5,7 @@ const router = require('express').Router();
 
 
 router.get("/getCategories", authUser, getCategories);
-router.get("/getCategoriesHome", authUser, getCategoriesHome);
+router.get("/getCategories/home", authUser, getCategoriesHome);
 router.get("/getCategories/:idCategorie", authUser, getCategoriesById);
 router.post("/postCategory", authUser, postCategory);
 router.patch("/updateCategory/:id_categoria", authUser, updateCategory);
