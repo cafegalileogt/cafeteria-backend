@@ -47,6 +47,22 @@ const createOrder = async (order, details) => {
   }
 };
 
+const getOrder = async () => {
+  const sql = `SELECT 
+              d.numero_orden,
+                u.nombre,
+                d.estado
+            FROM orden d 
+            INNER JOIN usuarios u ON d.id_usuario = u.id_usuario
+            ORDER BY d.fecha ASC`;
+  return new Promise((resolve, reject) => {
+    db.query(sql, (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+};
+
 const getOrderUserById = async (usuarioId) => {
   const sql = `SELECT 
                 o.numero_orden,
@@ -88,6 +104,7 @@ const getOrderDetailsByOrderId = async (numero_orden) => {
   });
 };
 
+
 const updateOrderStatus = async (numero_orden, estado, id_personal) => {
   const sql = 'UPDATE orden SET estado = ?, id_personal = ? WHERE numero_orden = ?';
   return new Promise((resolve, reject) => {
@@ -98,4 +115,4 @@ const updateOrderStatus = async (numero_orden, estado, id_personal) => {
   });
 };
 
-module.exports = { createOrder, getOrderUserById, getOrderDetailsByOrderId, updateOrderStatus };
+module.exports = { createOrder, getOrder, getOrderUserById, getOrderDetailsByOrderId, updateOrderStatus };

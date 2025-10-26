@@ -1,4 +1,4 @@
-const { order, orderByUserId, orderDetailsByOrderId, orderStatusUpdate  } = require('../controllers/orderController');
+const { order, orderList, orderByUserId, orderDetailsByOrderId, orderStatusUpdate  } = require('../controllers/orderController');
 const { authUser } = require('../controllers/authController');
 
 const router = require('express').Router();
@@ -8,6 +8,8 @@ router.post('/create', authUser, order);
 
 // Historial de órdenes por ID de usuario
 router.get('/historial/:usuarioId', authUser, orderByUserId);
+// Lista de todas las órdenes
+router.get('/list', authUser, orderList);
 // Detalles de la orden por número de orden
 router.get('/detalle/:numero_orden', authUser, orderDetailsByOrderId);
 // Actualizar estado de la orden
