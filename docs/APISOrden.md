@@ -91,7 +91,7 @@
 **Cuerpo de la solicitud:**
 ```json
 {
-  "estado": "<nuevo estado>"
+  "estado": "<nuevo estado>",
   "id_personal": "<ID del personal que realiza el cambio>"
 }
 ```

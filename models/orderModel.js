@@ -14,7 +14,7 @@ const createOrder = async (order, details) => {
     });
 
     // Insertar orden
-    const orderResult = await new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
       connection.query('INSERT INTO orden SET ?', order, (err, results) => {
         if (err) reject(err);
         else resolve(results);
@@ -47,14 +47,18 @@ const createOrder = async (order, details) => {
   }
 };
 
+// Obtener órdenes del día
 const getOrder = async () => {
-  const sql = `SELECT 
-              d.numero_orden,
-                u.nombre,
-                d.estado
-            FROM orden d 
-            INNER JOIN usuarios u ON d.id_usuario = u.id_usuario
-            ORDER BY d.fecha ASC`;
+  const sql = `
+    SELECT 
+      o.numero_orden,
+      u.nombre AS nombre,
+      o.estado
+    FROM orden o
+    INNER JOIN usuarios u ON o.id_usuario = u.id_usuario
+    WHERE DATE(o.fecha) = CURDATE()
+    ORDER BY o.fecha ASC
+  `;
   return new Promise((resolve, reject) => {
     db.query(sql, (err, results) => {
       if (err) reject(err);
@@ -63,19 +67,20 @@ const getOrder = async () => {
   });
 };
 
+
 const getOrderUserById = async (usuarioId) => {
-  const sql = `SELECT 
-                o.numero_orden,
-                o.fecha,
-                o.estado,
-                COALESCE(SUM(d.cantidad), 0) AS total_cantidad,
-                o.total
-            FROM orden AS o
-            LEFT JOIN detalle_orden AS d ON o.numero_orden = d.numero_orden
-
-            WHERE o.id_usuario = ?
-
-            GROUP BY o.numero_orden, o.fecha, o.estado, o.total`;
+  const sql = `
+    SELECT 
+      o.numero_orden,
+      o.fecha,
+      o.estado,
+      COALESCE(SUM(d.cantidad), 0) AS total_cantidad,
+      o.total
+    FROM orden AS o
+    LEFT JOIN detalle_orden AS d ON o.numero_orden = d.numero_orden
+    WHERE o.id_usuario = ?
+    GROUP BY o.numero_orden, o.fecha, o.estado, o.total
+  `;
   return new Promise((resolve, reject) => {
     db.query(sql, [usuarioId], (err, results) => {
       if (err) reject(err);
@@ -85,17 +90,19 @@ const getOrderUserById = async (usuarioId) => {
 };
 
 const getOrderDetailsByOrderId = async (numero_orden) => {
-  const sql = `SELECT 
-                d.numero_orden,
-                p.id_producto,
-                p.nombre,
-                p.descripcion,
-                d.cantidad,
-                d.precio_unitario,
-                d.subtotal
-            FROM detalle_orden d
-            INNER JOIN producto p ON d.id_producto = p.id_producto
-            WHERE d.numero_orden = ?`;
+  const sql = `
+    SELECT 
+      d.numero_orden,
+      p.id_producto,
+      p.nombre,
+      p.descripcion,
+      d.cantidad,
+      d.precio_unitario,
+      d.subtotal
+    FROM detalle_orden d
+    INNER JOIN producto p ON d.id_producto = p.id_producto
+    WHERE d.numero_orden = ?
+  `;
   return new Promise((resolve, reject) => {
     db.query(sql, [numero_orden], (err, results) => {
       if (err) reject(err);
@@ -103,7 +110,6 @@ const getOrderDetailsByOrderId = async (numero_orden) => {
     });
   });
 };
-
 
 const updateOrderStatus = async (numero_orden, estado, id_personal) => {
   const sql = 'UPDATE orden SET estado = ?, id_personal = ? WHERE numero_orden = ?';
@@ -115,4 +121,11 @@ const updateOrderStatus = async (numero_orden, estado, id_personal) => {
   });
 };
 
-module.exports = { createOrder, getOrder, getOrderUserById, getOrderDetailsByOrderId, updateOrderStatus };
+module.exports = {
+  createOrder,
+  getOrder,
+  getOrderUserById,
+  getOrderDetailsByOrderId,
+  updateOrderStatus
+};
+
