@@ -1,5 +1,5 @@
 // Order Controller
-const { createOrder, getOrderUserById, getOrderDetailsByOrderId, updateOrderStatus } = require('../models/orderModel');
+const { createOrder, getOrder, getOrderUserById, getOrderDetailsByOrderId, updateOrderStatus } = require('../models/orderModel');
 
 // Create a new order
 const order = async (req, res) => {
@@ -31,7 +31,14 @@ const order = async (req, res) => {
     }
 };
 
-
+const orderList = async (req, res) => {
+    try {
+        const orders = await getOrder();
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
 
 const orderByUserId = async (req, res) => {
 
@@ -81,6 +88,7 @@ const orderStatusUpdate = async (req, res) => {
 
 module.exports = {
     order,
+    orderList,
     orderByUserId,
     orderDetailsByOrderId,
     orderStatusUpdate

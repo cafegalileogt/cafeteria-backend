@@ -35,6 +35,20 @@
   }  
   ```
 
+---
+
+## Obtener lista de órdenes
+
+**Endpoint:** `GET /api/v1/orders/list`
+
+**Descripción:** Obtiene una lista de todas las órdenes.
+
+**Respuesta:**
+- **200 OK**: Devuelve una lista de todas las órdenes.
+- **404 Not Found**: Si no se encuentran órdenes.
+
+---
+
 ## Obtener pedidos por ID de usuario
 
 **Endpoint:** `GET /api/v1/orders/historial/:usuarioId`
