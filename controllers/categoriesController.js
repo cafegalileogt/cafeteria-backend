@@ -64,7 +64,6 @@ const getCategoriesHome = async (req, res) => {
       if (!result || result.length === 0) {
         return res.status(404).json({ message: "No hay Categorias" });
       }
-
       res.status(200).json({ result });
     } else {
       res.status(401).json({
@@ -134,7 +133,7 @@ const postCategory = async (req, res) => {
       const category = {
         nombre: nombre,
         horario: horario,
-        descripcion: descripcion,
+        // descripcion: descripcion,
         imagen_categoria: imagen,
       };
 
@@ -177,13 +176,14 @@ const updateCategory = async (req, res) => {
     const id_categoria = req.params.id_categoria;
     const updates = req.body;
 
+
     // Validar que haya al menos un campo a actualizar
     if (!updates || Object.keys(updates).length === 0) {
       return res.status(400).json({ message: "No se enviaron campos para actualizar" });
     }
 
     // Campos permitidos para actualización
-    const allowedFields = ['nombre', 'horario', 'descripcion', 'imagen_categoria'];
+    const allowedFields = ['nombre', 'horario', 'estado', 'imagen_categoria'];
 
     const fieldsToUpdate = Object.keys(updates).filter(field => allowedFields.includes(field));
 

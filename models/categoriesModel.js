@@ -13,7 +13,8 @@ const findAllCategories = async () => {
 
 // PARA LAS CATEGORIAS EN HOME
 const CategoriesHome = async () => {
-  const sql = "SELECT id_categoria, nombre, imagen_categoria FROM categoria;";
+const sql = `
+  SELECT id_categoria, nombre, horario, imagen_categoria FROM categoria WHERE estado = 1;`;  
   return new Promise((resolve, reject) => {
     db.query(sql, (err, results) => {
       if (err) reject(err);

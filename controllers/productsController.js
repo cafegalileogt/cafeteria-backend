@@ -103,6 +103,7 @@ const filtrarByCategories = async (req, res) => {
 
 
 const updateProduct = async (req, res) => {
+
   try {
     if (!req.user || !req.user.id_usuario) {
       return res.status(401).json({
@@ -121,6 +122,7 @@ const updateProduct = async (req, res) => {
 
     const id_producto = req.params.id_producto;
     const updates = req.body;
+
 
     // Validar que haya al menos un campo a actualizar
     if (!updates || Object.keys(updates).length === 0) {
@@ -142,13 +144,13 @@ const updateProduct = async (req, res) => {
 
     // Ejecutar la actualización usando el modelo
     const result = await updateProductModel(setClause, values);
-
     if (!result || result.affectedRows === 0) {
       return res.status(404).json({ message: "Producto no encontrado o no actualizado" });
     }
 
     return res.status(200).json({ message: "Producto actualizado exitosamente" });
   } catch (error) {
+    console.error("Error al actualizar el producto:", error);
     return res.status(400).json({ error: error.message });
   }
 };

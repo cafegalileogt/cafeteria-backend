@@ -11,6 +11,8 @@ const userRoutes = require('./routes/userRouters');
 const orderRoutes = require('./routes/orderRouters');
 const productRoutes = require('./routes/productsRouters');
 const categoryRoutes = require('./routes/categoriesRouters'); 
+const uploadRouter = require('./routes/uploadRouter'); 
+
 
 
 const app = express();
@@ -37,6 +39,7 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/categories', categoryRoutes);
+app.use('/api/v1/uploads', uploadRouter);
 
 
 app.listen(port, () => {
