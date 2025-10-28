@@ -132,7 +132,6 @@ const getOrderbyOrderId = async (numero_orden) => {
 }
 
 const updateOrderStatus = async (numero_orden, estado, id_personal) => {
-  console.log("model updateOrderStatus", numero_orden, estado, id_personal);
   const sql = 'UPDATE orden SET estado = ?, id_personal = ? WHERE numero_orden = ?';
   return new Promise((resolve, reject) => {
     db.query(sql, [estado, id_personal, numero_orden], (err, results) => {

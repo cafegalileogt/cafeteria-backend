@@ -27,7 +27,6 @@ const {
   
   // Listar órdenes del día
   const orderList = async (req, res) => {
-    console.log("datos")
     try {
       const orders = await getOrder();
       res.status(200).json(orders);
@@ -80,8 +79,6 @@ const {
       const { numero_orden } = req.params;
       const { estado } = req.body;
       const id_personal = 2;
-      console.log('id_personal', id_personal);
-      console.log('numero_orden',numero_orden);
       if (!numero_orden || !estado || !id_personal)
         return res.status(400).json({ error: 'Faltan datos para actualizar el estado' });
   
