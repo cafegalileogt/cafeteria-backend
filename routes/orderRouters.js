@@ -1,4 +1,4 @@
-const { order, orderList, orderByUserId, orderDetailsByOrderId, orderStatusUpdate  } = require('../controllers/orderController');
+const { order, orderList, orderByUserId, orderDetailsByOrderId, orderStatusUpdate, getOrderbyOrderId  } = require('../controllers/orderController');
 const { authUser } = require('../controllers/authController');
 
 const router = require('express').Router();
@@ -14,5 +14,9 @@ router.get('/list', authUser, orderList);
 router.get('/detalle/:numero_orden', authUser, orderDetailsByOrderId);
 // Actualizar estado de la orden
 router.patch('/actualizar_estado/:numero_orden', authUser, orderStatusUpdate);
+
+router.patch('/getOrderbyId/:numero_orden', authUser, getOrderbyOrderId);
+
+
 
 module.exports = router;

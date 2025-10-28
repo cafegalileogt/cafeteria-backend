@@ -111,7 +111,28 @@ const getOrderDetailsByOrderId = async (numero_orden) => {
   });
 };
 
+const getOrderbyOrderId = async (numero_orden) => {
+  const sql = `
+    SELECT 
+      o.numero_orden,
+      u.nombre AS nombre,
+      o.estado,
+      o.total,
+      o.fecha
+    FROM orden o
+    INNER JOIN usuarios u ON o.id_usuario = u.id_usuario
+    WHERE o.numero_orden = ?
+  `;
+  return new Promise((resolve, reject) => {
+    db.query(sql, [numero_orden], (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+}
+
 const updateOrderStatus = async (numero_orden, estado, id_personal) => {
+  console.log("model updateOrderStatus", numero_orden, estado, id_personal);
   const sql = 'UPDATE orden SET estado = ?, id_personal = ? WHERE numero_orden = ?';
   return new Promise((resolve, reject) => {
     db.query(sql, [estado, id_personal, numero_orden], (err, results) => {

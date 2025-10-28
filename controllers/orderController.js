@@ -61,18 +61,34 @@ const {
       res.status(500).json({ error: error.message });
     }
   };
+
+  const getOrderbyOrderId = async (req, res) => {
+    try {
+      const { numero_orden } = req.params;
+      if (!numero_orden) return res.status(400).json({ error: 'Falta el número de orden' });
+  
+      const orden = await getOrderbyOrderId(numero_orden);
+      res.status(200).json(orden);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
   
   // Actualizar estado
   const orderStatusUpdate = async (req, res) => {
     try {
       const { numero_orden } = req.params;
-      const { estado, id_personal } = req.body;
+      const { estado } = req.body;
+      const id_personal = 2;
+      console.log('id_personal', id_personal);
+      console.log('numero_orden',numero_orden);
       if (!numero_orden || !estado || !id_personal)
         return res.status(400).json({ error: 'Faltan datos para actualizar el estado' });
   
       await updateOrderStatus(numero_orden, estado, id_personal);
       res.status(200).json({ message: 'Estado actualizado' });
     } catch (error) {
+      console.error("Error al actualizar el estado de la orden:", error);
       res.status(500).json({ error: error.message });
     }
   };
@@ -82,6 +98,7 @@ const {
     orderList,
     orderByUserId,
     orderDetailsByOrderId,
-    orderStatusUpdate
+    orderStatusUpdate,
+    getOrderbyOrderId
   };
   
