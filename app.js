@@ -12,6 +12,7 @@ const orderRoutes = require('./routes/orderRouters');
 const productRoutes = require('./routes/productsRouters');
 const categoryRoutes = require('./routes/categoriesRouters'); 
 const uploadRouter = require('./routes/uploadRouter'); 
+const favoritesRouters = require('./routes/favoritesRouters');
 
 
 
@@ -40,6 +41,7 @@ app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/uploads', uploadRouter);
+app.use('/api/v1/favorites', favoritesRouters);
 
 
 app.listen(port, () => {
