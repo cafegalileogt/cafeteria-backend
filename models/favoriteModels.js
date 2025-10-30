@@ -26,7 +26,7 @@ const findFavoriteByUserIdAndProductId = async (id_usuario, id_producto) => {
 
  // OBTENER TODDOS LOS FAVORITOS DE UN USUARIO
 const findFavoriteByUserId = async (id_usuario) => {
-  const sql = "SELECT  a.id_usuario, b.nombre, b.precio, b.imagen_producto FROM favorito a INNER JOIN producto b ON a.id_producto = b.id_producto WHERE a.id_usuario = ?";
+  const sql = "SELECT  a.id_usuario, b.id_producto, b.nombre, b.precio, b.imagen_producto FROM favorito a INNER JOIN producto b ON a.id_producto = b.id_producto WHERE a.id_usuario = ?";
   return new Promise((resolve, reject) => {
     db.query(sql, id_usuario, (err, results) => {
       if (err) reject(err);
