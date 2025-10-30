@@ -95,12 +95,14 @@ const getFavoriteByUserIdAndProductId = async (req, res) => {
 
     if ([1, 2, 3].includes(idRole)) {
       const result = await findFavoriteByUserIdAndProductId(id_usuario, id_producto);
+      console.log("Resultado del favorito encontrado 1:", result, is_favorite, id_usuario, id_producto);
 
       if (!result || result.length === 0) {
         is_favorite = false;
         return res.status(404).json({ message: "Producto no marcado como favorito", is_favorite });
       }
 
+      console.log("Resultado del favorito encontrado: 2", result, is_favorite);
       return res.status(200).json({ result, is_favorite });
     } else {
       return res.status(401).json({
@@ -131,12 +133,13 @@ const postFavorite = async (req, res) => {
 
     let usuario = req.user.usuario;
     let idRole = req.user.id_rol;
+    const is_favorite = true;
 
     if (idRole === 1 || idRole === 2 || idRole === 3) {
 
       const existingFavorite = await findFavoriteByUserIdAndProductId(id_usuario, id_producto);
       if (existingFavorite && existingFavorite.length > 0) {
-        return res.status(409).json({ message: "El producto ya está en favoritos" });
+        return res.status(409).json({ message: "El producto ya está en favoritos", is_favorite });
       }
 
       const result = await addFavoriteModel(id_usuario, id_producto);
@@ -146,11 +149,11 @@ const postFavorite = async (req, res) => {
       }
 
       res.status(201).json({
-        message: "Agregado a favoritos exitosamente",
+        message: "Agregado a favoritos exitosamente", is_favorite
       });
     } else {
       res.status(401).json({
-        message: "No tiene permisos para agregar favoritos",
+        message: "No tiene permisos para agregar favoritos", 
       });
     }
   } catch (error) {
