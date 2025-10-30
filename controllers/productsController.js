@@ -1,3 +1,4 @@
+const { findFavoriteByUserIdAndProductId } = require("../models/favoriteModels");
 const { createProducts, findProductById, findAllCategories, findAllProductsCategorie, updateProductModel, deleteProductModel } = require("../models/productsModel");
 require("dotenv").config();
 
@@ -15,17 +16,27 @@ const crearProduct = async (req, res) => {
 
 const getProductById = async (req, res) => {
   const { id_producto } = req.params;
+  let id_usuario = req.user ? req.user.id_usuario : null;
 
   try {
     const product = await findProductById(id_producto);
     if (!product) {
       return res.status(404).json({ message: "Producto no encontrado" });
     }
-    res.status(200).json(product);
+
+    let is_favorite = false;
+    if (id_usuario) {
+      const favorite = await findFavoriteByUserIdAndProductId(id_usuario, id_producto);
+      is_favorite = favorite && favorite.length > 0;
+    }
+
+    // Agregar el valor de is_favorite a la respuesta
+    res.status(200).json({ product, is_favorite });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 const AllByCategories = async (req, res) => {
 
