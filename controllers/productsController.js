@@ -48,6 +48,7 @@ const AllByCategories = async (req, res) => {
           error: "No autenticado. Por favor, inicie sesión para continuar.",
         });
 
+
     let usuario = req.user.usuario;
     let idRole = req.user.id_rol;
 
