@@ -43,7 +43,7 @@ const getAllFavorites = async (req, res) => {
 
 
 
-// para Mostrar categorias en el home
+// para Mostrar favoritos por ID de usuario
 const getFavoritesByUserId = async (req, res) => {
   try {
     let id_usuario =
@@ -78,7 +78,7 @@ const getFavoritesByUserId = async (req, res) => {
 };
 
 
-// para Mostrar categorias en el home
+// para Mostrar favorito por ID de usuario y ID de producto
 const getFavoriteByUserIdAndProductId = async (req, res) => {
   try {
     const { id_producto } = req.params;
@@ -117,6 +117,7 @@ const getFavoriteByUserIdAndProductId = async (req, res) => {
 };
 
 
+// para Agregar favorito
 const postFavorite = async (req, res) => {
   try {
     const { id_producto } = req.params;
@@ -158,6 +159,7 @@ const postFavorite = async (req, res) => {
 };
 
 
+// para Eliminar favorito
 const deleteFavorite = async (req, res) => {
   try {
     const { id_producto } = req.params;
