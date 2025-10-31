@@ -1,6 +1,44 @@
 const db = require("../config/db");
 
 
+// OBTENER ORDENES POR RANGO DE FECHAS
+const findOrdersByDatesModel = async (from, to) => {
+  const sql = `SELECT 
+              o.numero_orden,
+                u.id_usuario,
+                u.correo_institucional,
+                o.fecha,
+                o.estado,
+                o.total,
+                o.id_personal
+            FROM orden o
+            INNER JOIN usuarios u ON o.id_usuario = u.id_usuario
+            WHERE  DATE_FORMAT(o.fecha, '%Y-%m-%d') BETWEEN ? AND ?;`;
+  return new Promise((resolve, reject) => {
+    db.query(sql, [from, to], (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+};
+
+
+// OBTENER HORA PICO DE ORDENES
+const findPeakHoursModel = async (from, to) => {
+  const sql = `SELECT 
+                  DATE_FORMAT(fecha, '%H:00') AS hour, COUNT(*) AS orders
+              FROM orden 
+              WHERE DATE_FORMAT(fecha, '%Y-%m-%d') BETWEEN ? AND ?
+              GROUP BY DATE_FORMAT(fecha, '%H:00')
+              ORDER BY orders DESC`;
+  return new Promise((resolve, reject) => {
+    db.query(sql, [from, to], (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+};
+
 //OBTENER TODAS LAS VENTAS POR RANGO DE FECHAS
 const findSalesByDatesModel = async (from, to) => {
   const sql = "SELECT DATE(fecha) AS date, COUNT(*) AS orders, SUM(total) AS total FROM orden WHERE estado = 'Entregada' AND DATE(fecha) BETWEEN ? AND ? GROUP BY DATE(fecha) ORDER BY DATE(fecha) ASC";
@@ -42,6 +80,8 @@ const obtenerTopTenProducts = async (from, to) => {
 
 
 module.exports = {
-    findSalesByDatesModel,
-    obtenerTopTenProducts
+  findOrdersByDatesModel,
+  findPeakHoursModel,
+  findSalesByDatesModel,
+  obtenerTopTenProducts
 };
