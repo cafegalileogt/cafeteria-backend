@@ -14,6 +14,7 @@ const categoryRoutes = require('./routes/categoriesRouters');
 const uploadRouter = require('./routes/uploadRouter'); 
 const favoritesRouters = require('./routes/favoritesRouters');
 const scheduleRouters = require('./routes/scheduleRouters');
+const reportsRouters = require('./routes/reportsRouters');
 
 
 
@@ -44,6 +45,7 @@ app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/uploads', uploadRouter);
 app.use('/api/v1/favorites', favoritesRouters);
 app.use('/api/v1/schedule', scheduleRouters);
+app.use('/api/v1/reports', reportsRouters);
 
 
 
