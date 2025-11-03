@@ -6,6 +6,7 @@ const { updateShedule, schedule, createScheduleException, getScheduleException, 
 const putShedule = async (req, res) => {
     const { dia } = req.params;
     const shedule = req.body;
+
     try {
         const result = await updateShedule(dia, shedule);
         res.status(200).json({ message: 'Horario actualizado exitosamente' });
@@ -47,6 +48,7 @@ const getException = async (req, res) => {
 
 // Eliminar una excepcion
 const deleteException = async (req, res) => {
+    
     const { id } = req.params;
     try {
         const result = await deleteScheduleException(id);

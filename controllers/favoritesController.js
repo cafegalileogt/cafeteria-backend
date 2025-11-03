@@ -95,14 +95,12 @@ const getFavoriteByUserIdAndProductId = async (req, res) => {
 
     if ([1, 2, 3].includes(idRole)) {
       const result = await findFavoriteByUserIdAndProductId(id_usuario, id_producto);
-      console.log("Resultado del favorito encontrado 1:", result, is_favorite, id_usuario, id_producto);
 
       if (!result || result.length === 0) {
         is_favorite = false;
         return res.status(404).json({ message: "Producto no marcado como favorito", is_favorite });
       }
 
-      console.log("Resultado del favorito encontrado: 2", result, is_favorite);
       return res.status(200).json({ result, is_favorite });
     } else {
       return res.status(401).json({
