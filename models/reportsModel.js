@@ -41,7 +41,7 @@ const findPeakHoursModel = async (from, to) => {
 
 //OBTENER TODAS LAS VENTAS POR RANGO DE FECHAS
 const findSalesByDatesModel = async (from, to) => {
-  const sql = "SELECT DATE(fecha) AS date, COUNT(*) AS orders, SUM(total) AS total FROM orden WHERE estado = 'Entregada' AND DATE(fecha) BETWEEN ? AND ? GROUP BY DATE(fecha) ORDER BY DATE(fecha) ASC";
+  const sql = "SELECT DATE(fecha) AS date, COUNT(*) AS orders, SUM(total) AS total FROM orden WHERE estado = 'Completada' AND DATE(fecha) BETWEEN ? AND ? GROUP BY DATE(fecha) ORDER BY DATE(fecha) ASC";
   return new Promise((resolve, reject) => {
     db.query(sql, [from, to], (err, results) => {
       if (err) reject(err);
@@ -63,7 +63,7 @@ const obtenerTopTenProducts = async (from, to) => {
       FROM orden o
       JOIN detalle_orden d ON o.numero_orden = d.numero_orden
       JOIN producto p ON d.id_producto = p.id_producto
-      WHERE o.estado = 'Entregada'
+      WHERE o.estado = 'Completada'
         AND DATE(o.fecha) BETWEEN ? AND ?
       GROUP BY p.id_producto, p.nombre
       ORDER BY sold_times DESC
